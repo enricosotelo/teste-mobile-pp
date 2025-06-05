@@ -89,11 +89,7 @@
       }
 
       .desktop-icon {
-        display: none;
-      }
-
-      .mobile-icon {
-        display: inline;
+        transform: rotateZ(90deg);
       }
     }
   </style>
@@ -117,19 +113,15 @@
       <div class="buttons">
         <button type="button" onclick="moveItems('left', 'right')">
           <span class="desktop-icon">→</span>
-          <span class="mobile-icon">↓</span>
         </button>
         <button type="button" onclick="moveItems('right', 'left')">
-          <span class="desktop-icon">←</span>
-          <span class="mobile-icon">↑</span>
+          <span class="desktop-icon">⏪︎</span>
         </button>
         <button type="button" onclick="moveAll('left', 'right')">
-          <span class="desktop-icon">⇒</span>
-          <span class="mobile-icon">⤵</span>
+          <span class="desktop-icon">⏩︎</span>
         </button>
         <button type="button" onclick="moveAll('right', 'left')">
           <span class="desktop-icon">⇐</span>
-          <span class="mobile-icon">⤴</span>
         </button>
       </div>
 
