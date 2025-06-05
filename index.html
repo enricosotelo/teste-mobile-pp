@@ -2,148 +2,175 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organizador de Frutas</title>
+  <style>
+    .container {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 20px;
+      padding: 30px;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .list {
+      border: 2px solid #ccc;
+      padding: 10px;
+      border-radius: 8px;
+      min-height: 150px;
+    }
+
+    .item {
+      padding: 10px;
+      border: 1px solid #999;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background 0.3s;
+    }
+
+    .item.selected {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      justify-items: center;
+    }
+
+    .buttons button {
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    select {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
-    <style>
-        .container {
-            display: flex;
-            gap: 40px;
-            margin: 30px;
-            flex-wrap: wrap;
-            align-items: flex-start;
+  <form>
+    <input type="text" name="team" placeholder="Nome do time" />
+
+    <select name="frutas" multiple></select>
+
+    <div class="container">
+      <!-- Lista de Cima -->
+      <div class="list" id="top-list">
+        <div class="item" data-value="1">Maçã</div>
+        <div class="item" data-value="2">Banana</div>
+        <div class="item" data-value="3">Uva</div>
+        <div class="item" data-value="4">Laranja</div>
+      </div>
+
+      <!-- Botões -->
+      <div class="buttons">
+        <button type="button" onclick="moveItems('top', 'bottom')">↓</button>
+        <button type="button" onclick="moveItems('bottom', 'top')">↑</button>
+        <button type="button" onclick="moveAll('top', 'bottom')">↓↓</button>
+        <button type="button" onclick="moveAll('bottom', 'top')">↑↑</button>
+      </div>
+
+      <!-- Lista de Baixo -->
+      <div class="list" id="bottom-list"></div>
+    </div>
+
+    <input type="date" name="ini_date" />
+    <input type="date" name="end_date" />
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    const select = document.querySelector('select[name="frutas"]');
+
+    function updateClickListeners() {
+      document.querySelectorAll('.item').forEach(item => {
+        item.onclick = function () {
+          this.classList.toggle('selected');
+        };
+      });
+    }
+
+    updateClickListeners();
+
+    function moveItems(from, to) {
+      const fromList = document.getElementById(`${from}-list`);
+      const toList = document.getElementById(`${to}-list`);
+      const selected = fromList.querySelectorAll('.item.selected');
+
+      selected.forEach(item => {
+        item.classList.remove('selected');
+        toList.appendChild(item);
+
+        const value = item.getAttribute('data-value');
+        const text = item.innerText;
+
+        if (to === 'bottom') {
+          if (!select.querySelector(`option[value="${value}"]`)) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.text = text;
+            option.selected = true;
+            select.appendChild(option);
+          }
         }
 
-        .list {
-            border: 2px solid #ccc;
-            padding: 10px;
-            width: 200px;
-            min-height: 200px;
-            border-radius: 8px;
+        if (to === 'top') {
+          const option = select.querySelector(`option[value="${value}"]`);
+          if (option) option.remove();
+        }
+      });
+
+      updateClickListeners();
+    }
+
+    function moveAll(from, to) {
+      const fromList = document.getElementById(`${from}-list`);
+      const toList = document.getElementById(`${to}-list`);
+      const allItems = fromList.querySelectorAll('.item');
+
+      allItems.forEach(item => {
+        item.classList.remove('selected');
+        toList.appendChild(item);
+
+        const value = item.getAttribute('data-value');
+        const text = item.innerText;
+
+        if (to === 'bottom') {
+          if (!select.querySelector(`option[value="${value}"]`)) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.text = text;
+            option.selected = true;
+            select.appendChild(option);
+          }
         }
 
-        .item {
-            padding: 10px;
-            border: 1px solid #999;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            background-color: #f9f9f9;
-            transition: background 0.3s;
+        if (to === 'top') {
+          const option = select.querySelector(`option[value="${value}"]`);
+          if (option) option.remove();
         }
+      });
 
-        .item.selected {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .buttons button {
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
-    <form action="">
-        <input type="text" name="team" placeholder="Nome do time">
-        <div class="container">
-            <select name="frutas" multiple>
-            </select>
-            <!-- Lista da esquerda -->
-            <div class="list" id="left-list">
-                <div class="item" data-value="1">Maçã</div>
-                <div class="item" data-value="2">Banana</div>
-                <div class="item" data-value="3">Uva</div>
-                <div class="item" data-value="4">Laranja</div>
-            </div>
-
-            <!-- Botões -->
-            <div class="buttons">
-                <button type="button" onclick="moveItems('left', 'right')">→</button>
-                <button type="button" onclick="moveItems('right', 'left')">←</button>
-
-            </div>
-
-            <!-- Lista da direita -->
-            <div class="list" id="right-list" data-name="selected-fruits">
-            </div>
-        </div>
-        <input type="date" name="ini_date" placeholder="Data inicial do time">
-        <input type="date" name="end_date" placeholder="Data final do time">
-        <button type="submit">Enviar</button>
-    </form>
-
-
-
-    <script>
-        const select = document.querySelector('select[name="frutas"]');
-
-        // Seleciona/desseleciona visualmente
-        document.querySelectorAll('.item').forEach(item => {
-            item.onclick = function () {
-                this.classList.toggle('selected');
-            }
-        });
-
-        const leftList = document.getElementById('left-list');
-        const rightList = document.getElementById('right-list');
-
-        leftList.addEventListener('contentChanged', () => {
-            console.log('Conteúdo da lista esquerda foi alterado');
-        });
-
-        rightList.addEventListener('contentChanged', () => {
-            console.log('Conteúdo da lista direita foi alterado');
-        });
-
-        function moveItems(from, to) {
-            const fromList = document.getElementById(`${from}-list`);
-            const toList = document.getElementById(`${to}-list`);
-
-            const selected = fromList.querySelectorAll('.item.selected');
-
-            selected.forEach(item => {
-                item.classList.remove('selected');
-                toList.appendChild(item);
-
-                const value = item.getAttribute('data-value');
-                const text = item.innerText;
-
-                if (to === 'right') {
-                    // Adiciona no select se não existir ainda
-                    if (!select.querySelector(`option[value="${value}"]`)) {
-                        const option = document.createElement('option');
-                        option.value = value;
-                        option.text = text;
-                        option.selected = true;
-                        select.appendChild(option);
-                    }
-                }
-
-                if (to === 'left') {
-                    // Remove do select se voltar pra esquerda
-                    const option = select.querySelector(`option[value="${value}"]`);
-                    if (option) {
-                        option.remove();
-                    }
-                }
-            });
-
-            toList.dispatchEvent(new CustomEvent('contentChanged'));
-            fromList.dispatchEvent(new CustomEvent('contentChanged'));
-        }
-    </script>
-
-
+      updateClickListeners();
+    }
+  </script>
 </body>
 
 </html>
