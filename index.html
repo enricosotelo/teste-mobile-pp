@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lista Responsiva</title>
   <style>
     * {
@@ -65,6 +65,14 @@
       width: 60px;
     }
 
+    .mobile-icon {
+      display: none;
+    }
+
+    .desktop-icon {
+      display: inline;
+    }
+
     select {
       display: none;
     }
@@ -78,25 +86,26 @@
       .buttons {
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
       }
 
-      .buttons button {
-        width: auto;
+      .desktop-icon {
+        display: none;
+      }
+
+      .mobile-icon {
+        display: inline;
       }
     }
   </style>
 </head>
 <body>
-
   <form>
     <input type="text" name="team" placeholder="Nome do time"><br><br>
 
-    <!-- Select oculto -->
     <select name="frutas" multiple></select>
 
     <div class="container">
-      <!-- Lista da esquerda / de cima -->
+      <!-- Lista de cima (mobile) ou esquerda (desktop) -->
       <div class="list" id="left-list">
         <div class="item" data-value="1">Maçã</div>
         <div class="item" data-value="2">Banana</div>
@@ -106,18 +115,30 @@
 
       <!-- Botões -->
       <div class="buttons">
-        <button type="button" onclick="moveItems('left', 'right')">→</button>
-        <button type="button" onclick="moveItems('right', 'left')">←</button>
-        <button type="button" onclick="moveAll('left', 'right')">⇒</button>
-        <button type="button" onclick="moveAll('right', 'left')">⇐</button>
+        <button type="button" onclick="moveItems('left', 'right')">
+          <span class="desktop-icon">→</span>
+          <span class="mobile-icon">↓</span>
+        </button>
+        <button type="button" onclick="moveItems('right', 'left')">
+          <span class="desktop-icon">←</span>
+          <span class="mobile-icon">↑</span>
+        </button>
+        <button type="button" onclick="moveAll('left', 'right')">
+          <span class="desktop-icon">⇒</span>
+          <span class="mobile-icon">⤵</span>
+        </button>
+        <button type="button" onclick="moveAll('right', 'left')">
+          <span class="desktop-icon">⇐</span>
+          <span class="mobile-icon">⤴</span>
+        </button>
       </div>
 
-      <!-- Lista da direita / de baixo -->
+      <!-- Lista de baixo (mobile) ou direita (desktop) -->
       <div class="list" id="right-list"></div>
     </div>
 
-    <input type="date" name="ini_date" placeholder="Data inicial do time">
-    <input type="date" name="end_date" placeholder="Data final do time">
+    <input type="date" name="ini_date">
+    <input type="date" name="end_date">
     <br><br>
     <button type="submit">Enviar</button>
   </form>
@@ -125,7 +146,7 @@
   <script>
     const select = document.querySelector('select[name="frutas"]');
 
-    // Clique para selecionar/desselecionar visualmente
+    // Clique para selecionar/deselecionar visualmente
     document.addEventListener('click', function (e) {
       if (e.target.classList.contains('item')) {
         e.target.classList.toggle('selected');
@@ -184,6 +205,5 @@
       });
     }
   </script>
-
 </body>
 </html>
